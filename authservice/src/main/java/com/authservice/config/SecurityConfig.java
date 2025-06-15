@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +24,9 @@ public class SecurityConfig {
      */
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     /**
      * Publicly accessible endpoints that do not require authentication
@@ -81,10 +85,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req -> {
                     req
                             .requestMatchers(openUrl).permitAll()
-                            .requestMatchers("/api/v1/welcome/message").hasRole("USER")
+                            .requestMatchers("/api/v1/welcome/message").hasAnyRole("USER", "ADMIN")
                             .anyRequest().authenticated();
-                })
-                .httpBasic(); // Basic auth (can be replaced with JWT later)
-        return http.build();
+                }).authenticationProvider(authProvider()) // Add authentication provider
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter before UsernamePasswordAuthenticationFilter
+//                .httpBasic(); // Basic auth (can be replaced with JWT later)
+        return http.build(); // Return the configured SecurityFilterChain
     }
 }

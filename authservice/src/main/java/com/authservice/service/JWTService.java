@@ -12,10 +12,14 @@ import java.util.Date;
 @Service
 public class JWTService {
 
-    /** Secret key used for signing the JWT (keep this secure and externalized in production) */
+    /**
+     * Secret key used for signing the JWT (keep this secure and externalized in production)
+     */
     private static final String SECRET_KEY = "my-super-secret-key";
 
-    /** Token validity period (1 day in milliseconds) */
+    /**
+     * Token validity period (1 day in milliseconds)
+     */
     private static final long EXPIRATION_TIME = 86400000;
 
     /**
@@ -25,12 +29,19 @@ public class JWTService {
      * @param role     the user's role to be embedded in the token
      * @return a signed JWT token string
      */
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role) { // Generates a JWT token with the provided username and role
         return JWT.create()
                 .withSubject(username) // Sets the subject of the token
                 .withClaim("role", role) // Custom claim for user's role
                 .withIssuedAt(new Date()) // Token issue time
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // Token expiry time
                 .sign(Algorithm.HMAC256(SECRET_KEY)); // Signing with HMAC SHA-256 and secret key
+    }
+
+    public String validateTokenAndRetrieveSubject(String token) { // Validates the JWT token and retrieves the subject (username)
+        return JWT.require(Algorithm.HMAC256(SECRET_KEY)) // Verifying the token with the secret key
+                .build() // Parsing the token
+                .verify(token) // Verifying the token
+                .getSubject(); // Retrieving the subject (username)
     }
 }
