@@ -18,36 +18,47 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    //   SecuirtyConfigFile - to Permit All request
-    //    What to keep in Configuration file
-    //  1. url open
-    //   2. url to authenticate
-    //    3. Authorization
-
+    /**
+     * Injected CustomUserDetailsService for retrieving user details from the database
+     */
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    private String[] openUrl =
-            {
-                    "/api/v1/auth/register",
-                    "/api/v1/auth/login",
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html",
-                    "/swagger-resources/**",
-                    "/webjars/**"
-            };
+    /**
+     * Publicly accessible endpoints that do not require authentication
+     */
+    private final String[] openUrl = {
+            "/api/v1/auth/register",
+            "/api/v1/auth/login",
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/swagger-resources/**",
+            "/webjars/**"
+    };
 
+    /**
+     * Bean for password encoding using BCrypt
+     * Used to hash and verify passwords securely
+     */
     @Bean
     public PasswordEncoder getEcodedPassword() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Bean for AuthenticationManager
+     * Delegates authentication process to configured AuthenticationProvider
+     */
     @Bean
     public AuthenticationManager authManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
+    /**
+     * Configures the AuthenticationProvider
+     * Uses DaoAuthenticationProvider with custom UserDetailsService and password encoder
+     */
     @Bean
     public AuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -56,19 +67,24 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    /**
+     * Configures the HTTP security filter chain
+     * - Disables CSRF protection (for stateless APIs)
+     * - Allows unauthenticated access to specified open URLs
+     * - Requires authentication for other requests
+     * - Secures specific route with role-based authorization
+     */
     @Bean
     public SecurityFilterChain securityConfig1(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())  // Disable CSRF
-                .authorizeHttpRequests
-                        (req ->
-                        {
-//                          req.anyRequest().permitAll();
-                            req.requestMatchers(openUrl).permitAll()
-                                    .requestMatchers("/api/v1/welcome/message").hasRole("USER")
-                                    .anyRequest().authenticated();
-                        }).httpBasic();
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(req -> {
+                    req
+                            .requestMatchers(openUrl).permitAll()
+                            .requestMatchers("/api/v1/welcome/message").hasRole("USER")
+                            .anyRequest().authenticated();
+                })
+                .httpBasic(); // Basic auth (can be replaced with JWT later)
         return http.build();
-
     }
 }
