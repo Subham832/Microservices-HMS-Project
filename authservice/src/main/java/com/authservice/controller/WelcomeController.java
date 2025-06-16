@@ -1,5 +1,7 @@
 package com.authservice.controller;
 
+import com.authservice.entity.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +22,8 @@ public class WelcomeController {
      * @return welcome message string
      */
     @GetMapping("/message") // Endpoint: GET http://localhost:8086/api/v1/welcome/message
-    public String welcome() {
+    public String welcome(@AuthenticationPrincipal User user) {
+        System.out.println(user.getName());
         return "Welcome!";
     }
 }

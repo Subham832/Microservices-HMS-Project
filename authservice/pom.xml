@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Maven Project Definition -->
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Inheriting Spring Boot Parent Configuration -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.5.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> <!-- Uses the Spring Boot parent to simplify plugin/dependency management -->
     </parent>
+
+    <!-- Basic Project Coordinates -->
     <groupId>com.authservice</groupId>
     <artifactId>authservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>authservice</name>
     <description>Spring Security Project For Spring Boot</description>
+
+    <!-- Optional Project Metadata -->
     <url/>
     <licenses>
-        <license/>
+        <license/> <!-- License can be defined for open source compliance -->
     </licenses>
     <developers>
-        <developer/>
+        <developer/> <!-- Developer info can be used for documentation -->
     </developers>
     <scm>
         <connection/>
@@ -26,33 +35,29 @@
         <tag/>
         <url/>
     </scm>
+
+    <!-- Global Properties -->
     <properties>
-        <java.version>17</java.version>
+        <java.version>17</java.version> <!-- Java version used in the project -->
+        <spring-cloud.version>2025.0.0</spring-cloud.version> <!-- ✅ Recommended stable version for Spring Cloud -->
     </properties>
+
+    <!-- Project Dependencies -->
     <dependencies>
 
-        <!--
-            Spring Boot Starter for Spring Data JPA
-            Enables ORM and repository support with Hibernate
-        -->
+        <!-- Enables Spring Data JPA (Hibernate-based ORM and Repositories) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!--
-            Spring Boot Starter for Web
-            Provides support for REST APIs, embedded Tomcat, JSON handling (Jackson)
-        -->
+        <!-- Provides embedded Tomcat, REST API support, Jackson for JSON -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--
-            Spring Boot DevTools
-            Improves development workflow with hot reload and automatic restarts
-        -->
+        <!-- Enables hot reload during development, improving productivity -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -60,70 +65,73 @@
             <optional>true</optional>
         </dependency>
 
-        <!--
-            MySQL JDBC Driver
-            Enables MySQL database connectivity at runtime
-        -->
+        <!-- MySQL JDBC Driver for runtime connectivity with MySQL database -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!--
-            Spring Boot Starter for Testing
-            Includes JUnit, Mockito, Spring Test for unit and integration testing
-        -->
+        <!-- Includes JUnit, Mockito, and Spring testing libraries -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!--
-            Spring Security Core Module
-            Adds authentication and authorization capabilities
-        -->
+        <!-- Adds Spring Security capabilities (authentication and authorization) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!--
-            Spring Security Test Support
-            Provides mock authentication utilities for testing secured endpoints
-        -->
+        <!-- Enables testing of secured endpoints and security configurations -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!--
-            SpringDoc OpenAPI UI
-            Auto-generates Swagger UI for REST API documentation
-        -->
+        <!-- Provides OpenAPI 3 documentation and Swagger UI integration -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.5.0</version>
         </dependency>
 
-        <!--
-            Auth0 Java JWT Library
-            Used for generating, parsing, and validating JWT tokens
-        -->
+        <!-- JWT library for generating, parsing, and validating tokens -->
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
             <version>4.4.0</version>
         </dependency>
 
+        <!-- Registers service as Eureka Discovery Client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
     </dependencies>
 
+    <!-- Dependency Management for Spring Cloud BOM -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Imports version-aligned Spring Cloud dependencies to ensure compatibility -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
+    <!-- Maven Build Plugins -->
     <build>
         <plugins>
+            <!-- Enables Spring Boot packaging and execution via Maven -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
