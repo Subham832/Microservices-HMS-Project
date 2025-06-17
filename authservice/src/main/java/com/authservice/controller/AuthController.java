@@ -3,6 +3,8 @@ package com.authservice.controller;
 import com.authservice.dto.APIResponse;
 import com.authservice.dto.LoginDto;
 import com.authservice.dto.UserDto;
+import com.authservice.entity.User;
+import com.authservice.repository.UserRepository;
 import com.authservice.service.AuthService;
 import com.authservice.service.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ public class AuthController {
 
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Registers a new user in the system.
@@ -94,5 +98,11 @@ public class AuthController {
         response.setStatus(401);
         response.setData("Un-Authorized Access");
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.getStatus()));
+    }
+
+    @GetMapping("/get-user")
+    public User getUserByUserName(@RequestParam String username) {
+        User user = userRepository.findByUsername(username);
+        return user;
     }
 }
