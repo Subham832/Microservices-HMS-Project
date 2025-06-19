@@ -1,17 +1,10 @@
 package com.propertyservice.controller;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import com.propertyservice.entity.Property;
-import com.propertyservice.service.ProperyService;
-import org.slf4j.LoggerFactory;
+import com.propertyservice.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,9 +14,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertyservice.dto.APIResponse;
 import com.propertyservice.dto.PropertyDto;
-import com.propertyservice.entity.RoomAvailability;
-import com.propertyservice.entity.Rooms;
-import com.propertyservice.repository.RoomAvailabilityRepository;
 import org.springframework.http.MediaType;
 
 
@@ -32,7 +22,7 @@ import org.springframework.http.MediaType;
 public class PropertyController {
 
     @Autowired
-    private ProperyService propertyService;
+    private PropertyService propertyService;
 
     @PostMapping(
             value = "/add-property",

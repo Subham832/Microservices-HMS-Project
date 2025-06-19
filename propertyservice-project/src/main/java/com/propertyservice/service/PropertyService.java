@@ -1,29 +1,20 @@
 package com.propertyservice.service; // Defines the service layer package for property-related business logic.
 
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import com.propertyservice.constants.AppConstants;
+import com.propertyservice.dto.EmailRequest;
 import com.propertyservice.entity.*;
 import com.propertyservice.repository.*;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.propertyservice.controller.PropertyController;
-import com.propertyservice.dto.APIResponse;
-import com.propertyservice.dto.EmailRequest;
 import com.propertyservice.dto.PropertyDto;
 import com.propertyservice.dto.RoomsDto;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
-
 
 @Service // Indicates that this class is a service component containing business logic related to property management.
-public class ProperyService { // Typo: Consider renaming to PropertyService for clarity and correctness.
+public class PropertyService { // Typo: Consider renaming to PropertyService for clarity and correctness.
 
     // Injects JPA repositories and other services used in property creation and file handling.
     @Autowired
@@ -46,11 +37,12 @@ public class ProperyService { // Typo: Consider renaming to PropertyService for 
 
     @Autowired
     private S3Service s3Service; // Service for uploading files to Amazon S3.
-    @Autowired
-    private EmailProducer emailProducer;
 
     @Autowired
     private PropertyPhotosRepository propertyPhotosRepository;
+    @Autowired
+    private KafkaTemplate<String, EmailRequest> kafkaTemplate;
+
 
     /**
      * Adds a new property to the system by persisting property details, rooms, and associated photos.
@@ -94,21 +86,19 @@ public class ProperyService { // Typo: Consider renaming to PropertyService for 
             roomRepository.save(rooms);
         }
 
-        // Upload property images to Amazon S3 and capture the returned URLs.
-        List<String> fileUrls = s3Service.uploadFiles(files);
+        EmailRequest request = new EmailRequest("mrsubhamkumar001@gmail.com", "Property Added", "Your Property Details Are Now Live");
+        kafkaTemplate.send(AppConstants.TOPIC, request);
 
-        // Save uploaded image URLs as PropertyPhotos entities linked to the saved property.
-        for (String url : fileUrls) {
-            PropertyPhotos photo = new PropertyPhotos();
-            photo.setUrl(url);
-            photo.setProperty(savedProperty);
-            propertyPhotosRepository.save(photo);
-        }
-        emailProducer.sendEmail(new EmailRequest(
-                "mrsubhamkumar001@gmail.com",
-                "Property added!",
-                "Your property has been successfully added."
-        ));
+        // Upload property images to Amazon S3 and capture the returned URLs.
+//        List<String> fileUrls = s3Service.uploadFiles(files);
+//
+//        // Save uploaded image URLs as PropertyPhotos entities linked to the saved property.
+//        for (String url : fileUrls) {
+//            PropertyPhotos photo = new PropertyPhotos();
+//            photo.setUrl(url);
+//            photo.setProperty(savedProperty);
+//            propertyPhotosRepository.save(photo);
+//        }
         // Return the fully constructed and saved Property entity.
         return savedProperty;
     }

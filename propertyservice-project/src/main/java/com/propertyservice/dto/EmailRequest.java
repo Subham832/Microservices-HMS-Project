@@ -12,6 +12,9 @@ public class EmailRequest {
         this.subject = subject;
         this.body = body;
     }
+    public EmailRequest(){
+        super();
+    }
 
     public String getTo() {
         return to;
@@ -35,5 +38,14 @@ public class EmailRequest {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    @Override
+    public String toString() {
+        return "EmailRequest{" +
+                "to='" + to + '\'' +
+                ", subject='" + subject + '\'' +
+                ", body='" + body + '\'' +
+                '}';
     }
 }
