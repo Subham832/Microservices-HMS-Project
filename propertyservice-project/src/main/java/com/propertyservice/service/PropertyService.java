@@ -2,6 +2,7 @@ package com.propertyservice.service; // Defines the service layer package for pr
 
 
 import com.propertyservice.constants.AppConstants;
+import com.propertyservice.dto.APIResponse;
 import com.propertyservice.dto.EmailRequest;
 import com.propertyservice.entity.*;
 import com.propertyservice.repository.*;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.propertyservice.dto.PropertyDto;
 import com.propertyservice.dto.RoomsDto;
+
+import java.time.LocalDate;
+import java.util.List;
 
 
 @Service // Indicates that this class is a service component containing business logic related to property management.
@@ -101,5 +105,16 @@ public class PropertyService { // Typo: Consider renaming to PropertyService for
 //        }
         // Return the fully constructed and saved Property entity.
         return savedProperty;
+    }
+
+    public APIResponse searchProperty(String name, LocalDate date) {
+        List<Property> properties = propertyRepository.searchProperty(name, date);
+        APIResponse<List<Property>> response = new APIResponse<>();
+
+        response.setMessage("Search result");
+        response.setStatus(200);
+        response.setData(properties);
+
+        return response;
     }
 }

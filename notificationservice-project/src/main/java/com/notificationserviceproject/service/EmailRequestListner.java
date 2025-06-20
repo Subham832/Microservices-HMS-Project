@@ -29,7 +29,6 @@ public class EmailRequestListner {
 //            System.out.println(emailContent.getBody());
             SimpleMailMessage sm = new SimpleMailMessage();
             sm.setTo(emailContent.getTo());
-            sm.setSubject(emailContent.getSubject());
             sm.setText(emailContent.getBody());
 
             javaMailSender.send(sm);

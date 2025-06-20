@@ -1,6 +1,9 @@
 package com.propertyservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "property")
@@ -34,6 +37,18 @@ public class Property {
     @ManyToOne
     @JoinColumn(name = "state_id")
     private State state;
+
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Rooms> rooms;
+
+    public List<Rooms> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Rooms> rooms) {
+        this.rooms = rooms;
+    }
 
     public City getCity() {
         return city;
