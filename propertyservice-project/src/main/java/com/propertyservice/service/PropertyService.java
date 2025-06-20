@@ -6,6 +6,7 @@ import com.propertyservice.dto.APIResponse;
 import com.propertyservice.dto.EmailRequest;
 import com.propertyservice.entity.*;
 import com.propertyservice.repository.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,9 @@ import com.propertyservice.dto.PropertyDto;
 import com.propertyservice.dto.RoomsDto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service // Indicates that this class is a service component containing business logic related to property management.
@@ -116,5 +119,41 @@ public class PropertyService { // Typo: Consider renaming to PropertyService for
         response.setData(properties);
 
         return response;
+    }
+
+    public APIResponse<PropertyDto> findPropertyById(long id) {
+        APIResponse<PropertyDto> response = new APIResponse<>();
+        PropertyDto dto = new PropertyDto();
+        Optional<Property> opProp = propertyRepository.findById(id);
+        if (opProp.isPresent()) {
+            Property property = opProp.get();
+            dto.setArea(property.getArea().getName());
+            dto.setCity(property.getCity().getName());
+            dto.setState(property.getState().getName());
+            List<Rooms> rooms = property.getRooms();
+            List<RoomsDto> roomsDto = new ArrayList<>();
+            for (Rooms room : rooms) {
+                RoomsDto roomDto = new RoomsDto();
+                BeanUtils.copyProperties(room, roomDto);
+                roomsDto.add(roomDto);
+            }
+            dto.setRooms(roomsDto);
+            BeanUtils.copyProperties(property, dto);
+            response.setMessage("Matching Record");
+            response.setStatus(200);
+            response.setData(dto);
+            return response;
+        }
+
+        return null;
+    }
+
+    public List<RoomAvailability> getTotalRoomsAvailable(long id) {
+        return availabilityRepository.findByRoomId(id);
+
+    }
+
+    public Rooms getRoomById(long id) {
+        return roomRepository.findById(id).get();
     }
 }

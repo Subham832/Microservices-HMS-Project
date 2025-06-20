@@ -17,9 +17,11 @@ spring:
               filters:
                 - RewritePath=/auth/(?<segment>.*), /${segment}
 
-            - id: microservice-api
-              uri: lb://MICROSERVICE1-PROJECT
+            - id: propertyservice-api
+              uri: lb://PROPERTYSERVICE-PROJECT
               predicates:
-                - Path=/micro1/**
+                - Path=/property/**
               filters:
-                - RewritePath=/micro1/(?<segment>.*), /${segment}
+                - RewritePath=/property/(?<segment>.*), /${segment}
+
+

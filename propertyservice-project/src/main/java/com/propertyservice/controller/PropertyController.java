@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.propertyservice.dto.APIResponse;
 import com.propertyservice.dto.PropertyDto;
 import com.propertyservice.entity.Property;
+import com.propertyservice.entity.RoomAvailability;
+import com.propertyservice.entity.Rooms;
 import com.propertyservice.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @RestController
@@ -58,6 +61,34 @@ public class PropertyController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         APIResponse response = propertyService.searchProperty(name, date);
+        return response;
+    }
+
+    @GetMapping("/property-id")
+    public APIResponse<PropertyDto> getPropertyById(@RequestParam long id) {
+        APIResponse<PropertyDto> response = propertyService.findPropertyById(id);
+        return response;
+    }
+
+    @GetMapping("/room-available-room-id")
+    public APIResponse<List<RoomAvailability>> getTotalRoomsAvailable(@RequestParam long id) {
+        List<RoomAvailability> totalRooms = propertyService.getTotalRoomsAvailable(id);
+
+        APIResponse<List<RoomAvailability>> response = new APIResponse<>();
+        response.setMessage("Total rooms");
+        response.setStatus(200);
+        response.setData(totalRooms);
+        return response;
+    }
+
+    @GetMapping("/room-id")
+    public APIResponse<Rooms> getRoomType(@RequestParam long id) {
+        Rooms room = propertyService.getRoomById(id);
+
+        APIResponse<Rooms> response = new APIResponse<>();
+        response.setMessage("Total rooms");
+        response.setStatus(200);
+        response.setData(room);
         return response;
     }
 }

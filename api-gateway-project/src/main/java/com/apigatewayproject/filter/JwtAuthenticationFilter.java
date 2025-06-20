@@ -29,7 +29,8 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
     // Public endpoints that do not require authentication
     private static final List<String> openApiEndpoints = List.of(
             "/auth/api/v1/auth/login",
-            "/auth/api/v1/auth/register"
+            "/auth/api/v1/auth/register",
+            "/property/api/v1/property/search-property"
     );
 
     // Protected endpoints and the roles allowed to access them
