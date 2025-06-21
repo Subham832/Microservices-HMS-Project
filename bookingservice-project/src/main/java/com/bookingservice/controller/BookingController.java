@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/booking")
@@ -34,6 +35,7 @@ public class BookingController {
     @PostMapping("/add-to-cart")
     public APIResponse<List<String>> cart(@RequestBody BookingDto bookingDto) {
 
+        Optional<RoomAvailability> matchedRoom = java.util.Optional.empty();
 
         APIResponse<List<String>> apiResponse = new APIResponse<>();
 
@@ -52,7 +54,6 @@ public class BookingController {
             boolean isAvailable = availableRooms.stream()
                     .anyMatch(ra -> ra.getAvailableDate().equals(date) && ra.getAvailableCount() > 0);
 
-
             System.out.println("Date " + date + " available: " + isAvailable);
 
             if (!isAvailable) {
@@ -62,7 +63,10 @@ public class BookingController {
                 apiResponse.setData(messages);
                 return apiResponse;
             }
-
+            //Store the Id Number into long
+            matchedRoom = availableRooms.stream()
+                    .filter(ra -> ra.getAvailableDate().equals(date) && ra.getAvailableCount() > 0)
+                    .findFirst();
         }
         //Save it to Booking Table with status pending
         Bookings bookings = new Bookings();
@@ -78,7 +82,10 @@ public class BookingController {
             BookingDate bookingDate = new BookingDate();
             bookingDate.setDate(date);
             bookingDate.setBookings(savedBooking);
-            bookingDateRepository.save(bookingDate);
+            BookingDate savedBookingDate = bookingDateRepository.save(bookingDate);
+            if (savedBookingDate != null) {
+                propertyClient.updateRoomCount(matchedRoom.get().getId(), date);
+            }
             //Call To Update Room Count Using Feign Client
         }
         return null;

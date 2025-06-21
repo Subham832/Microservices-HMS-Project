@@ -7,6 +7,7 @@ import com.propertyservice.dto.PropertyDto;
 import com.propertyservice.entity.Property;
 import com.propertyservice.entity.RoomAvailability;
 import com.propertyservice.entity.Rooms;
+import com.propertyservice.repository.RoomAvailabilityRepository;
 import com.propertyservice.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,6 +27,8 @@ public class PropertyController {
 
     @Autowired
     private PropertyService propertyService;
+    @Autowired
+    private RoomAvailabilityRepository roomAvailabilityRepository;
 
     @PostMapping(
             value = "/add-property",
@@ -90,5 +93,25 @@ public class PropertyController {
         response.setStatus(200);
         response.setData(room);
         return response;
+    }
+
+    @PutMapping("/updateRoomCount")
+    public APIResponse<Boolean> updateRoomCount(@RequestParam long id, @RequestParam LocalDate date) {
+        APIResponse<Boolean> response = new APIResponse<>();
+        RoomAvailability roomsAvailable = roomAvailabilityRepository.getRooms(id, date);
+        int count = roomsAvailable.getAvailableCount();
+        if (count > 0) {
+            roomsAvailable.setAvailableCount(count - 1);
+            roomAvailabilityRepository.save(roomsAvailable);
+            response.setMessage("Updated");
+            response.setStatus(200);
+            response.setData(true);
+            return response;
+        } else {
+            response.setMessage("No Availability");
+            response.setStatus(500);
+            response.setData(false);
+            return response;
+        }
     }
 }
