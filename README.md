@@ -1,7 +1,7 @@
 
-# 🏥 Hospital Management System (HMS) – Microservices Architecture
+# 🏥 Hotel Management System (HMS) – Microservices Architecture
 
-A fully modular, scalable, and cloud-ready **Hospital Management System** built with Java, Spring Boot, and Spring Cloud. This project demonstrates a professional-grade microservices architecture, including **11 services**, a **Netflix Eureka registry**, and a **Spring Cloud Gateway**, designed for real-world deployment.
+A fully modular, scalable, and cloud-ready **Hotel Management System** built with Java, Spring Boot, and Spring Cloud. This project demonstrates a professional-grade microservices architecture, including **11 services**, a **Netflix Eureka registry**, and a **Spring Cloud Gateway**, designed for real-world deployment.
 
 ---
 
@@ -24,9 +24,9 @@ A fully modular, scalable, and cloud-ready **Hospital Management System** built 
 ├── api-gateway/         # Routing, authentication, rate limiting
 ├── config-server/       # Externalized configuration management
 ├── eureka-server/       # Service registry
-├── department-service/  # Department definitions for hospitals
-├── hospital-service/    # Core hospital data: profiles, locations
-├── booking-service/     # Room/slot bookings management
+├── department-service/  # Room types and facilities
+├── hotel-service/    # Core hotel data: profiles, locations
+├── booking-service/     # Room booking and reservation management
 ├── user-service/        # Users, authentication, wallet system
 ├── payment-service/     # Transaction handling (payments/refunds)
 ├── inventory-service/   # Room inventory and availability
@@ -41,15 +41,15 @@ A fully modular, scalable, and cloud-ready **Hospital Management System** built 
 - **API Gateway**: Entry point, routing, JWT validation
 - **Config Server**: Central management of `application-{env}.yml`
 - **Eureka Server**: Dynamic discovery for all services
-- **Department Service**: Defines hospital departments (e.g., ICU, OPD)
-- **Hospital Service**: Manages hospital metadata and healthcare locations
+- **Department Service**: Manages room types, facilities, and hotel services
+- **Hotel Service**: Manages hotel metadata and hotel branches and locations
 - **Booking Service**: Room availability, slot booking, booking history
 - **User Service**: Authentication, user profiles, wallet & balances
 - **Payment Service**: Handles charges, refunds, transaction records
 - **Inventory Service**: Tracks room stock and availability
-- **Review Service**: Ratings and textual feedback for patients
+- **Review Service**: Ratings and textual feedback from guests
 - **Notification Service**: Sends real-time Email/SMS alerts
-- **Admin Service**: Admin dashboards, service health endpoints
+- **Admin Service**: Handles hotel management operations, admin dashboards, and service monitoring
 
 ---
 
@@ -64,6 +64,7 @@ A fully modular, scalable, and cloud-ready **Hospital Management System** built 
 | Config Management     | Spring Cloud Config                 |
 | Databases             | MySQL (JPA/Hibernate), MongoDB      |
 | Messaging & Events    | Kafka / RabbitMQ (if integrated)    |
+| Payment Gateway        | Stripe                               |
 | API Docs              | Swagger/OpenAPI                    |
 | Build & Packaging     | Maven                              |
 | CI & Containerization | Docker (if Dockerfiles available)   |
