@@ -1,124 +1,130 @@
-package com.propertyservice.entity;
+package com.propertyservice.entity; // Defines the package for entity classes mapped to DB tables.
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference; // Handles parent side of bidirectional relationship during JSON serialization.
+import jakarta.persistence.*; // Imports all necessary JPA annotations.
 
-import java.util.List;
+import java.util.List; // Used to represent a list of room entities.
 
+/**
+ * Property is a JPA entity representing a property listing in the system.
+ * It is mapped to the "property" table in the database and includes details such as
+ * beds, rooms, bathrooms, location, and its associated rooms.
+ */
 @Entity
-@Table(name = "property")
+@Table(name = "property") // Maps this class to the "property" table.
 public class Property {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String name;
+    @Id // Marks the primary key.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Uses identity strategy for auto-incrementing ID.
+    private long id; // Unique identifier for the property.
 
-    @Column(name = "number_of_beds")
+    private String name; // Name of the property.
+
+    @Column(name = "number_of_beds") // Maps to "number_of_beds" column.
     private int numberOfBeds;
 
-    @Column(name = "number_of_rooms")
+    @Column(name = "number_of_rooms") // Maps to "number_of_rooms" column.
     private int numberOfRooms;
 
-    @Column(name = "number_of_bathrooms")
+    @Column(name = "number_of_bathrooms") // Maps to "number_of_bathrooms" column.
     private int numberOfBathrooms;
 
-    @Column(name = "number_of_guests_allowed")
+    @Column(name = "number_of_guests_allowed") // Maps to "number_of_guests_allowed" column.
     private int numberOfGuestAllowed;
 
-    @ManyToOne
-    @JoinColumn(name = "city_id")
+    @ManyToOne // Many properties can belong to one city.
+    @JoinColumn(name = "city_id") // Foreign key column in the "property" table.
     private City city;
 
-    @ManyToOne
-    @JoinColumn(name = "area_id")
+    @ManyToOne // Many properties can belong to one area.
+    @JoinColumn(name = "area_id") // Foreign key column for area.
     private Area area;
 
-    @ManyToOne
-    @JoinColumn(name = "state_id")
+    @ManyToOne // Many properties can belong to one state.
+    @JoinColumn(name = "state_id") // Foreign key column for state.
     private State state;
 
-    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Rooms> rooms;
+    @OneToMany(mappedBy = "property", cascade = CascadeType.ALL, orphanRemoval = true) // Property has many rooms.
+    @JsonManagedReference // Handles forward reference serialization.
+    private List<Rooms> rooms; // List of rooms associated with this property.
 
-    public List<Rooms> getRooms() {
+    public List<Rooms> getRooms() { // Getter for rooms.
         return rooms;
     }
 
-    public void setRooms(List<Rooms> rooms) {
+    public void setRooms(List<Rooms> rooms) { // Setter for rooms.
         this.rooms = rooms;
     }
 
-    public City getCity() {
+    public City getCity() { // Getter for city.
         return city;
     }
 
-    public void setCity(City city) {
+    public void setCity(City city) { // Setter for city.
         this.city = city;
     }
 
-    public Area getArea() {
+    public Area getArea() { // Getter for area.
         return area;
     }
 
-    public void setArea(Area area) {
+    public void setArea(Area area) { // Setter for area.
         this.area = area;
     }
 
-    public State getState() {
+    public State getState() { // Getter for state.
         return state;
     }
 
-    public void setState(State state) {
+    public void setState(State state) { // Setter for state.
         this.state = state;
     }
 
-    public long getId() {
+    public long getId() { // Getter for ID.
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(long id) { // Setter for ID.
         this.id = id;
     }
 
-    public String getName() {
+    public String getName() { // Getter for property name.
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name) { // Setter for property name.
         this.name = name;
     }
 
-    public int getNumberOfBeds() {
+    public int getNumberOfBeds() { // Getter for number of beds.
         return numberOfBeds;
     }
 
-    public void setNumberOfBeds(int numberOfBeds) {
+    public void setNumberOfBeds(int numberOfBeds) { // Setter for number of beds.
         this.numberOfBeds = numberOfBeds;
     }
 
-    public int getNumberOfRooms() {
+    public int getNumberOfRooms() { // Getter for number of rooms.
         return numberOfRooms;
     }
 
-    public void setNumberOfRooms(int numberOfRooms) {
+    public void setNumberOfRooms(int numberOfRooms) { // Setter for number of rooms.
         this.numberOfRooms = numberOfRooms;
     }
 
-    public int getNumberOfBathrooms() {
+    public int getNumberOfBathrooms() { // Getter for number of bathrooms.
         return numberOfBathrooms;
     }
 
-    public void setNumberOfBathrooms(int numberOfBathrooms) {
+    public void setNumberOfBathrooms(int numberOfBathrooms) { // Setter for number of bathrooms.
         this.numberOfBathrooms = numberOfBathrooms;
     }
 
-    public int getNumberOfGuestAllowed() {
+    public int getNumberOfGuestAllowed() { // Getter for number of guests allowed.
         return numberOfGuestAllowed;
     }
 
-    public void setNumberOfGuestAllowed(int numberOfGuestAllowed) {
+    public void setNumberOfGuestAllowed(int numberOfGuestAllowed) { // Setter for number of guests allowed.
         this.numberOfGuestAllowed = numberOfGuestAllowed;
     }
 }

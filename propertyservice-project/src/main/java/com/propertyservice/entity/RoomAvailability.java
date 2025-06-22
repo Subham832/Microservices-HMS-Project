@@ -1,62 +1,66 @@
-package com.propertyservice.entity;
+package com.propertyservice.entity; // Defines the package for JPA entity classes.
 
-import java.time.LocalDate;
+import java.time.LocalDate; // Represents a date without time zone.
 
-import jakarta.persistence.*;
+import jakarta.persistence.*; // Imports JPA annotations for entity mapping.
 
+/**
+ * RoomAvailability is a JPA entity representing the availability and pricing of a room on a specific date.
+ * It is linked to the Rooms entity and stored in the "room_availability" table.
+ */
 @Entity
-@Table(name = "room_availability")
+@Table(name = "room_availability") // Maps the entity to the "room_availability" table.
 public class RoomAvailability {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Id // Primary key field.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generates the ID using the database's identity strategy.
+    private long id; // Unique identifier for the availability entry.
 
-    private LocalDate availableDate;
-    private int availableCount;
-    private double price;
+    private LocalDate availableDate; // Date for which the room availability applies.
+    private int availableCount; // Number of available rooms for the specified date.
+    private double price; // Price of the room for that date.
 
-    @ManyToOne
-    @JoinColumn(name = "room_id")
-    private Rooms room;
+    @ManyToOne // Many availability records belong to one room.
+    @JoinColumn(name = "room_id") // Foreign key referencing the room.
+    private Rooms room; // The room to which this availability record belongs.
 
-    public long getId() {
+    public long getId() { // Getter for ID.
         return id;
     }
 
-    public LocalDate getAvailableDate() {
+    public LocalDate getAvailableDate() { // Getter for available date.
         return availableDate;
     }
 
-    public int getAvailableCount() {
+    public int getAvailableCount() { // Getter for available count.
         return availableCount;
     }
 
-    public double getPrice() {
+    public double getPrice() { // Getter for price.
         return price;
     }
 
-    public Rooms getRoom() {
+    public Rooms getRoom() { // Getter for associated room.
         return room;
     }
 
-    public void setId(long id) {
+    public void setId(long id) { // Setter for ID.
         this.id = id;
     }
 
-    public void setAvailableDate(LocalDate availableDate) {
+    public void setAvailableDate(LocalDate availableDate) { // Setter for available date.
         this.availableDate = availableDate;
     }
 
-    public void setAvailableCount(int availableCount) {
+    public void setAvailableCount(int availableCount) { // Setter for available count.
         this.availableCount = availableCount;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(double price) { // Setter for price.
         this.price = price;
     }
 
-    public void setRoom(Rooms room) {
+    public void setRoom(Rooms room) { // Setter for associated room.
         this.room = room;
     }
 }
